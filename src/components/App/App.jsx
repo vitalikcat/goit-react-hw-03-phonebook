@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ContactForm from '../ContactForm/ContactForm';
 import ContactList from '../ContactList/ContactList';
 import Filter from '../Filter/Filter';
-import filterContacts from '../../filter/filter';
 import uuid from 'uuid/v4';
 import PropTypes from 'prop-types';
 
@@ -69,7 +68,9 @@ export default class App extends Component {
 
   render() {
     const { contacts, filter } = this.state;
-    const filteredContacts = filterContacts(contacts, filter);
+    const filteredContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase()),
+    );
 
     return (
       <div>
@@ -80,7 +81,7 @@ export default class App extends Component {
         <Filter
           onChangeFilter={this.handleInputChange}
           filter={filter}
-          contacts={this.state.contacts}
+          contacts={contacts}
         />
         <ContactList
           items={filteredContacts}
@@ -91,7 +92,7 @@ export default class App extends Component {
   }
 }
 
-App.prpTypes = {
+App.propTypes = {
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
